@@ -33,7 +33,11 @@ let modelController = (function() {
     }
 
     isCorrect(answer) {
-      return answer === this.correct;
+      return answer == this.correct;
+      /*This has to be compared using == instead of === because some of the answer can be numbers but
+      when we grab the number from the choices chosen, the number would be a string. This can be easily
+      solve by parsing it was parseInt but that would have it parse ALL answers including ones that
+      are actually strings. */
     }
   }
 
@@ -107,6 +111,7 @@ let viewController = (function(){
     choice2: '#choice2',
     choice3: '#choice3',
     choice4: '#choice4',
+    result: '#result',
   };
 
   return {
@@ -125,6 +130,36 @@ let appController = (function(model, view){
 
   let DOM = view.getDOMstrings();
 
+  function displayQuestion(question) {
+    document.querySelector(DOM.questionDescription).textContent = question.getDescription();
+    let choices = question.choices;
+    console.log(choices);
+
+    document.querySelector(DOM.choice1).textContent = choices[0];
+    document.querySelector(DOM.choice2).textContent = choices[1];
+    document.querySelector(DOM.choice3).textContent = choices[2];
+    document.querySelector(DOM.choice4).textContent = choices[3];
+
+    let checkAnswer = function(event){
+      console.log(event.toElement.textContent);
+      let answer = event.toElement.textContent;
+      console.log(question.isCorrect(answer));
+      if (question.isCorrect(answer)){
+        document.querySelector(DOM.result).textContent = 'Correct!';
+      } else{
+        document.querySelector(DOM.result).textContent = 'Wrong!';
+      }
+      document.querySelector(DOM.result).style.display = 'block';
+    };
+
+    //EventListeners
+    document.querySelector(DOM.choice1).addEventListener('click', checkAnswer);
+    document.querySelector(DOM.choice2).addEventListener('click', checkAnswer);
+    document.querySelector(DOM.choice3).addEventListener('click', checkAnswer);
+    document.querySelector(DOM.choice4).addEventListener('click', checkAnswer);
+  }
+
+
   let qList = model.getQuestions;
   let qOrder = model.quizOrder;
   console.log(qList);
@@ -132,14 +167,11 @@ let appController = (function(model, view){
   console.log(currQ.getDescription());
 
   //Display Questions to the UI
-  document.querySelector(DOM.questionDescription).textContent = currQ.getDescription();
-  let choices = currQ.choices;
-  console.log(choices);
-  //Store the user's button click
-  document.querySelector(DOM.choice1).textContent = choices[0];
-  document.querySelector(DOM.choice2).textContent = choices[1];
-  document.querySelector(DOM.choice3).textContent = choices[2];
-  document.querySelector(DOM.choice4).textContent = choices[3];
+  displayQuestion(currQ);
+
+  //Store User's Pick
+  // let answer = getAnswer();
+  // console.log('Test Answer:' + answer);
 
   //Check for correct answer
 

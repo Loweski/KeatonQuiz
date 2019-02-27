@@ -8,6 +8,8 @@
 .choice {
   width: 45%;
   margin:auto;
+  display: block;
+  align-self: left;
 }
 
 body {
@@ -20,11 +22,9 @@ body {
 }
 
 .choiceList {
-  align-items: center;
-  display: flex;
 }
 
-#question{
+#questionList{
   background-color: black;
   padding: 1%;
   margin:auto;

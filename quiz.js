@@ -112,6 +112,7 @@ let viewController = (function(){
     choice3: '#choice3',
     choice4: '#choice4',
     result: '#result',
+    questionList: '#questionList',
   };
 
   return {
@@ -129,54 +130,35 @@ let appController = (function(model, view){
   console.log('Inside Controller: ' + model.quizOrder);
 
   let DOM = view.getDOMstrings();
-
-  function displayQuestion(question) {
-    document.querySelector(DOM.questionDescription).textContent = question.getDescription();
-    let choices = question.choices;
-    console.log(choices);
-
-    document.querySelector(DOM.choice1).textContent = choices[0];
-    document.querySelector(DOM.choice2).textContent = choices[1];
-    document.querySelector(DOM.choice3).textContent = choices[2];
-    document.querySelector(DOM.choice4).textContent = choices[3];
-
-    let checkAnswer = function(event){
-      console.log(event.toElement.textContent);
-      let answer = event.toElement.textContent;
-      console.log(question.isCorrect(answer));
-      if (question.isCorrect(answer)){
-        document.querySelector(DOM.result).textContent = 'Correct!';
-      } else{
-        document.querySelector(DOM.result).textContent = 'Wrong!';
-      }
-      document.querySelector(DOM.result).style.display = 'block';
-    };
-
-    //EventListeners
-    document.querySelector(DOM.choice1).addEventListener('click', checkAnswer);
-    document.querySelector(DOM.choice2).addEventListener('click', checkAnswer);
-    document.querySelector(DOM.choice3).addEventListener('click', checkAnswer);
-    document.querySelector(DOM.choice4).addEventListener('click', checkAnswer);
-  }
-
-
   let qList = model.getQuestions;
   let qOrder = model.quizOrder;
-  console.log(qList);
-  let currQ = qList[qOrder[0]];
-  console.log(currQ.getDescription());
-
-  //Display Questions to the UI
-  displayQuestion(currQ);
-
-  //Store User's Pick
-  // let answer = getAnswer();
-  // console.log('Test Answer:' + answer);
-
-  //Check for correct answer
 
 
-  //Stop quiz if wrong, other wise continue until done
+
+  let qHtmlList = [];
+
+  for (let i = 0; i < qOrder.length; i++){
+    let currQ = qList[qOrder[i]];
+    let choices = currQ.choices;
+    let html =
+    `<h3 id='questionDescription'>${currQ.getDescription()}</h3>
+      <div class="choiceList">
+        <button class="choice" type="button">${choices[0]}</button>
+        <button class="choice" type="button">${choices[1]}</button>
+        <button class="choice" type="button">${choices[2]}</button>
+        <button class="choice" type="button">${choices[3]}</button>
+      </div>`;
+    qHtmlList.push(html);
+  }
+
+  document.querySelector(DOM.questionList).innerHTML = qHtmlList.join('');
+  console.log(qHtmlList);
+
+  //Create the HTML for all the questions
+
+  //Add button to check for all of them
+
+
 
 
 })(modelController, viewController);
